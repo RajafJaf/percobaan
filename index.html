@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slot Gacor Ultra - Cloud System</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif;
+    -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+input { user-select: text; -webkit-user-select: text; }
+
+body{
+    min-height:100vh; display:flex; justify-content:center; align-items:center;
+    background:linear-gradient(135deg,#111,#333); overflow: hidden; position: relative; color: white;
+}
+
+/* AUTH STYLE (Login / Register) */
+.auth-container {
+    background: rgba(0,0,0,0.8); padding: 30px; border-radius: 15px;
+    border: 2px solid gold; width: 340px; text-align: center; box-shadow: 0 0 20px rgba(255,215,0,0.2);
+}
+.auth-container h2 { color: gold; margin-bottom: 20px; }
+.auth-input {
+    width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px;
+    border: 1px solid #555; background: #222; color: white; outline: none; text-align: center;
+}
+.auth-btn {
+    width: 100%; padding: 12px; margin-top: 15px; border-radius: 25px;
+    background: gold; color: black; font-weight: bold; border: none; cursor: pointer;
+}
+
+/* GAME & ADMIN STYLE */
+.container{ text-align:center; width:95%; max-width:700px; padding-bottom: 80px; display: none; }
+.history-top-btn {
+    position: absolute; top: 15px; right: 15px; background-color: #008cba;
+    color: white; padding: 10px 15px; font-size: 13px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold;
+}
+.logout-btn {
+    position: absolute; top: 15px; left: 15px; background-color: #ff4d4d;
+    color: white; padding: 10px 15px; font-size: 13px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold;
+}
+.machine{ display:flex; justify-content:center; gap:8px; margin:20px 0; }
+.reel{
+    width:65px; height:65px; overflow:hidden; background:white;
+    border-radius:10px; border:3px solid gold; position:relative; box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+.reel.spinning{ filter:blur(2px); }
+.track{ position:absolute; width:100%; top:0; left:0; will-change:transform; }
+.item{ width:100%; height:65px; display:flex; justify-content:center; align-items:center; font-size:38px; }
+.info{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+.box{ background:rgba(255,255,255,.2); padding:10px 15px; border-radius:10px; }
+.controls{ margin-top:15px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px; }
+button{ padding:12px 20px; margin:5px; border:none; border-radius:30px; cursor:pointer; font-weight:bold; outline: none; }
+button:hover{ opacity:.9; }
+#spinBtn { background-color: #4CAF50; color: white; min-width: 90px; }
+#autoMenuBtn { background-color: #ff9800; color: white; }
+#turboBtn { background-color: #9c27b0; color: white; }
+#turboBtn.active { background-color: #e91e63; box-shadow: 0 0 10px #e91e63; }
+#result{ margin-top:15px; font-size:24px; font-weight:bold; min-height: 35px; }
+
+/* PANEL ADMIN STYLE */
+#adminPanel {
+    display: none; width: 95%; max-width: 800px; background: #222;
+    padding: 20px; border-radius: 15px; border: 3px solid red; max-height: 90vh; overflow-y: auto;
+}
+.admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+.admin-table th, .admin-table td { border: 1px solid #444; padding: 10px; text-align: center; }
+.admin-table th { background-color: red; color: white; }
+.admin-select { padding: 5px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; }
+.admin-input-saldo { width: 80px; padding: 5px; text-align: center; background: #333; color: white; border: 1px solid #555; }
+
+/* MODAL */
+.modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); justify-content:center; align-items:center; z-index: 101; }
+.modal-content{ background:white; color:black; padding:20px; border-radius:15px; width:320px; text-align: center; }
+.option{ width:100%; margin:5px 0; padding:10px; font-weight:bold; border-radius:10px; border:none; cursor:pointer; }
+
+/* ANIMASI KOIN / SCREEN */
+.particle { position: absolute; pointer-events: none; z-index: 999; }
+@keyframes coinExplode {
+    0% { transform: translate(-50%, -50%) scale(0.1) rotate(0deg); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--cx)), calc(-50% + var(--cy))) scale(1.6) rotate(1080deg); opacity: 0; }
+}
+.p-coin-jp { animation: coinExplode var(--dur) cubic-bezier(0.1, 0.6, 0.2, 1) forwards; z-index: 1100; }
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 3px); }
+    20%, 40%, 60%, 80% { transform: translate(6px, -3px); }
+}
+.shake-screen { animation: screenShake 0.5s linear infinite; }
+</style>
+</head>
+<body>
+
+<div id="authPanel" class="auth-container">
+    <h2 id="authTitle">LOGIN PLAYER</h2>
+    <input type="text" id="authUsername" class="auth-input" placeholder="Username">
+    <input type="password" id="authPassword" class="auth-input" placeholder="Password">
+    <button class="auth-btn" onclick="prosesAuth()">MASUK</button>
+    <p id="toggleAuthText" style="margin-top:15px; font-size:13px; color:gold; cursor:pointer;" onclick="toggleAuthMode()">Belum punya akun? Daftar disini</p>
+</div>
+
+<div id="adminPanel">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid red; padding-bottom:10px;">
+        <h2>🛠️ PANEL KONTROL ADMIN</h2>
+        <button style="background:red; color:white; padding:8px 15px;" onclick="logout()">LOGOUT</button>
+    </div>
+    
+    <h3 style="margin-top:20px; color: gold;">👥 Pengaturan Saldo & Kemenangan User</h3>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Saldo (Rp)</th>
+                <th>Status Settingan</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="adminUserTableBody">
+            </tbody>
+    </table>
+
+    <h3 style="margin-top:30px; color: gold;">📋 Log Riwayat Login Seluruh Device</h3>
+    <div style="max-height: 200px; overflow-y:auto; background:#111; padding:10px; border-radius:8px; margin-top:10px; text-align:left; font-size:13px;">
+        <div id="adminLoginLogs">Memuat log...</div>
+    </div>
+</div>
+
+<button class="logout-btn" id="logoutTopBtn" style="display:none;" onclick="logout()">KELUAR</button>
+<button class="history-top-btn" id="adminTopBtn" style="display:none; background:red;" onclick="bukaPanelAdminBypass()">PANEL ADMIN</button>
+
+<div class="container" id="mainContainer">
+    <h1>🀄 SLOT GACOR CLOUD 🀄</h1>
+    <p style="font-size:14px; margin-bottom:10px; color:gold;">Selamat Datang, <span id="displayUser">Player</span>!</p>
+
+    <div class="machine">
+        <div class="reel"><div class="track" id="r0"></div></div>
+        <div class="reel"><div class="track" id="r1"></div></div>
+        <div class="reel"><div class="track" id="r2"></div></div>
+        <div class="reel"><div class="track" id="r3"></div></div>
+        <div class="reel"><div class="track" id="r4"></div></div>
+    </div>
+
+    <div class="info">
+        <div class="box">Saldo: Rp<span id="saldo">0,00</span></div>
+        <div class="box">Bet: Rp<span id="betText">0,50</span></div>
+        <div class="box" id="autoSpinBox" style="display: none;">Auto: <span id="autoCountText">0</span>x</div>
+    </div>
+
+    <div class="controls">
+        <button id="turboBtn" onclick="toggleTurbo()">TURBO: OFF</button>
+        <button onclick="openBet()">Bet</button>
+        <button id="spinBtn" onclick="handleSpinClick()">SPIN</button>
+        <button id="autoMenuBtn" onclick="openAutoMenu()">AUTO</button>
+    </div>
+    <div id="result"></div>
+</div>
+
+<div class="modal" id="betModal">
+    <div class="modal-content">
+        <h3 style="margin-bottom:10px;">Pilih Bet</h3>
+        <button class="option" onclick="setBet(0.50)">Rp0,50</button>
+        <button class="option" onclick="setBet(1.00)">Rp1,00</button>
+        <button class="option" onclick="setBet(5.00)">Rp5,00</button>
+        <button class="option" onclick="setBet(10.00)">Rp10,00</button>
+        <button class="option" style="background:#ddd;" onclick="closeBet()">Tutup</button>
+    </div>
+</div>
+
+<div class="modal" id="autoModal">
+    <div class="modal-content">
+        <h3 style="margin-bottom:10px;">Pilih Jumlah Auto Spin</h3>
+        <button class="option" onclick="startAutoSpin(10)">Auto Spin 10x</button>
+        <button class="option" onclick="startAutoSpin(50)">Auto Spin 50x</button>
+        <button class="option" style="background:#ddd;" onclick="closeAutoMenu()">Batal</button>
+    </div>
+</div>
+
+<div class="modal" id="jackpotModal" style="display:none; background:rgba(0,0,0,0.85); z-index: 1000;">
+    <div class="modal-content" style="background: linear-gradient(145deg, #222, #111); color: gold; border: 4px solid gold; width: 360px; padding: 30px; box-shadow: 0 0 30px gold;">
+        <h2 style="font-size: 26px; text-shadow: 0 0 10px red; margin-bottom: 5px;">🔥 JACKPOT MUTLAK 🔥</h2>
+        <h3 style="color: #fff; margin-bottom: 15px;">5 KEMBAR!</h3>
+        <div id="jpEmojiBox" style="width: 90px; height: 90px; line-height: 90px; margin: 0 auto 20px auto; background: white; border: 3px solid gold; border-radius: 15px; font-size: 55px; box-shadow: 0 0 20px #fff;">🀄</div>
+        <p style="color: #ccc; font-size: 13px; margin-bottom: 5px;">Total Hadiah:</p>
+        <div id="jpCounterText" style="font-size: 30px; font-weight: bold; color: #fff; text-shadow: 0 0 10px #4CAF50; margin-bottom: 25px;">Rp0,00</div>
+        <button class="option" style="background: gold; color: black; font-size: 16px; padding: 12px;" onclick="closeJackpotModal()">KLAIM HADIAH</button>
+    </div>
+</div>
+
+<script>
+// --- KONFIGURASI SUPABASE (MOHON DIISI DENGAN DATA PROYEK SUPABASE ANDA) ---
+const SUPABASE_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhcHBvbWJ2Zm5oanF2cnlwcmhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NjE4MTMsImV4cCI6MjA5NjIzNzgxM30.OPHOG8VGH_86hrn4a68qq7faxxLpK7XgeLiFee50dxQ";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const emojiSettings = {
+    "🀄": { nama: "Mahjong", x5: 9173.32, x4: 3.80, x3: 0.75 }, 
+    "🐉": { nama: "Naga",    x5: 773.98,  x4: 3.50, x3: 0.70 },  
+    "⚡": { nama: "Zeus",    x5: 509.19,  x4: 2.80, x3: 0.65 }, 
+    "👹": { nama: "Ogre",    x5: 93.73,   x4: 2.50, x3: 0.60 }
+};
+const fruits = Object.keys(emojiSettings);
+
+let currentUser = "";
+let currentRole = "player"; // player / admin
+let userSettinganMenang = "Normal"; // Diambil dinamis dari cloud
+let saldo = 0.00;
+let bet = 0.50;
+let spinning = false;
+let isTurbo = false;
+let forceStopRequested = false; 
+let autoSpinCount = 0;   
+let isAutoSpinning = false; 
+const intervals = {};
+let jackpotPromiseResolver = null;
+
+let isLoginMode = true;
+function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    document.getElementById("authTitle").textContent = isLoginMode ? "LOGIN PLAYER" : "DAFTAR AKUN";
+    document.getElementById("toggleAuthText").textContent = isLoginMode ? "Belum punya akun? Daftar disini" : "Sudah punya akun? Login disini";
+}
+
+// FORMAT RUPIAH
+function formatMurni(nilai) {
+    return nilai.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// PROSES LOGIN / REGISTER
+async function prosesAuth() {
+    const user = document.getElementById("authUsername").value.trim();
+    const pass = document.getElementById("authPassword").value.trim();
+
+    if(!user || !pass) { alert("Isi semua data!"); return; }
+
+    // DETEKSI LOG LOGIN BYPASS ADMIN
+    if(user === "kutu" && pass === "loncat") {
+        currentUser = "Admin Kontrol";
+        currentRole = "admin";
+        document.getElementById("authPanel").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadAdminData();
+        // Simpan log login admin ke cloud
+        await supabase.from('login_logs').insert([{ username: 'Admin (kutu)', perangkat: navigator.userAgent }]);
+        return;
+    }
+
+    if(isLoginMode) {
+        // Mode Login Player
+        const { data, error } = await supabase.from('users').select('*').eq('username', user).single();
+        if(error || !data || data.password !== pass) {
+            alert("Username atau Password Salah / Tidak Ditemukan!");
+            return;
+        }
+        // Sukses Login Player
+        currentUser = data.username;
+        saldo = parseFloat(data.saldo);
+        userSettinganMenang = data.status_menang;
+        currentRole = "player";
+        
+        // Simpan log login device ke database cloud
+        await supabase.from('login_logs').insert([{ username: currentUser, perangkat: navigator.userAgent }]);
+        masukGame();
+    } else {
+        // Mode Daftar Player Baru
+        const { data: cekUser } = await supabase.from('users').select('username').eq('username', user).single();
+        if(cekUser) { alert("Username sudah terpakai!"); return; }
+
+        const { error } = await supabase.from('users').insert([{ username: user, password: pass, saldo: 10.00, status_menang: 'Normal' }]);
+        if(error) { alert("Gagal mendaftar!"); return; }
+        alert("Pendaftaran Berhasil! Silakan Login.");
+        toggleAuthMode();
+    }
+}
+
+function masukGame() {
+    document.getElementById("authPanel").style.display = "none";
+    document.getElementById("mainContainer").style.display = "block";
+    document.getElementById("logoutTopBtn").style.display = "block";
+    document.getElementById("displayUser").textContent = currentUser;
+    updateUI();
+}
+
+function logout() {
+    currentUser = "";
+    currentRole = "player";
+    document.getElementById("mainContainer").style.display = "none";
+    document.getElementById("adminPanel").style.display = "none";
+    document.getElementById("logoutTopBtn").style.display = "none";
+    document.getElementById("adminTopBtn").style.display = "none";
+    document.getElementById("authPanel").style.display = "block";
+    document.getElementById("authUsername").value = "";
+    document.getElementById("authPassword").value = "";
+}
+
+function bukaPanelAdminBypass() {
+    if(currentRole === "admin") {
+        document.getElementById("mainContainer").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadAdminData();
+    }
+}
+
+// AMBIL DATA DASHBOARD ADMIN
+async function loadAdminData() {
+    // Ambil Data User
+    const { data: users, error } = await supabase.from('users').select('*');
+    if(!error && users) {
+        const tbody = document.getElementById("adminUserTableBody");
+        tbody.innerHTML = "";
+        users.forEach(u => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><b>${u.username}</b></td>
+                <td><input type="number" step="0.1" class="admin-input-saldo" id="sd-${u.username}" value="${u.saldo}"></td>
+                <td>
+                    <select class="admin-select" id="st-${u.username}">
+                        <option value="Normal" ${u.status_menang === 'Normal' ? 'selected':''}>Normal (7.5%)</option>
+                        <option value="Gacor" ${u.status_menang === 'Gacor' ? 'selected':''}>Pasti Gacor (Kembar 5)</option>
+                        <option value="Zonk" ${u.status_menang === 'Zonk' ? 'selected':''}>Kunci Zonk (100% Kalah)</option>
+                    </select>
+                </td>
+                <td><button style="background:green; color:white; border-radius:5px; padding:5px 10px;" onclick="simpanSetinganUser('${u.username}')">Simpan</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Ambil Data Log Login
+    const { data: logs } = await supabase.from('login_logs').select('*').order('waktu', { ascending: false }).limit(20);
+    const logBox = document.getElementById("adminLoginLogs");
+    logBox.innerHTML = "";
+    if(logs) {
+        logs.forEach(l => {
+            const d = new Date(l.waktu).toLocaleString("id-ID");
+            logBox.innerHTML += `⏱️ <b>[${d}]</b> - User: <b>${l.username}</b> masuk menggunakan perangkat info: <span style="color:#aaa;">${l.perangkat.substring(0,60)}...</span><br>`;
+        });
+    }
+}
+
+// SIMPAN HASIL CONFIG ADMIN KE DATABASE CLOUD
+async function simpanSetinganUser(targetUser) {
+    const saldoBaru = parseFloat(document.getElementById(`sd-${targetUser}`).value);
+    const settinganBaru = document.getElementById(`st-${targetUser}`).value;
+
+    const { error } = await supabase.from('users').update({ saldo: saldoBaru, status_menang: settinganBaru }).eq('username', targetUser);
+    if(!error) {
+        alert(`Berhasil memperbarui data ${targetUser}!`);
+        loadAdminData();
+    } else {
+        alert("Gagal memperbarui cloud.");
+    }
+}
+
+// ================= CODES GAME SLOT UTAMA =================
+function randomFruit(){ return fruits[Math.floor(Math.random() * fruits.length)]; }
+function randomFruitExcept(fb){ const al = fruits.filter(f => !fb.includes(f)); return al[Math.floor(Math.random() * al.length)]; }
+
+function createTrack(id){
+    const track = document.getElementById(id); track.innerHTML = "";
+    for(let i=0;i<12;i++){
+        const div = document.createElement("div"); div.className = "item"; div.textContent = randomFruit(); track.appendChild(div);
+    }
+}
+["r0","r1","r2","r3","r4"].forEach(createTrack);
+
+function startReel(id){
+    const track = document.getElementById(id); track.parentElement.classList.add("spinning");
+    const speed = isTurbo ? 60 : 120;
+    intervals[id] = setInterval(()=>{
+        const item = document.createElement("div"); item.className = "item"; item.textContent = randomFruit(); track.prepend(item);
+        track.style.transition = "none"; track.style.transform = "translateY(-65px)"; track.offsetHeight;
+        track.style.transition = `transform ${speed/1000}s linear`; track.style.transform = "translateY(0px)";
+        while(track.children.length > 12) track.removeChild(track.lastElementChild);
+    }, speed);
+}
+
+function stopReel(id, forcedFruit = null){
+    clearInterval(intervals[id]); const track = document.getElementById(id); track.parentElement.classList.remove("spinning");
+    const fruit = forcedFruit ? forcedFruit : randomFruit(); track.innerHTML = `<div class="item">${fruit}</div>`; return fruit;
+}
+
+function wait(ms){ return new Promise(resolve => setTimeout(resolve, isTurbo ? ms * 0.15 : ms)); }
+
+function jalankanCounterJackpot(targetHadiah) {
+    const counterElement = document.getElementById("jpCounterText"); let start = null;
+    function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / 2000, 1);
+        counterElement.textContent = "Rp" + formatMurni(progress * targetHadiah);
+        if (progress < 1) window.requestAnimationFrame(step);
+        else counterElement.textContent = "Rp" + formatMurni(targetHadiah);
+    }
+    window.requestAnimationFrame(step);
+}
+
+function closeJackpotModal() {
+    document.getElementById("jackpotModal").style.display = "none";
+    if (jackpotPromiseResolver) { jackpotPromiseResolver(); jackpotPromiseResolver = null; }
+}
+
+function toggleTurbo() {
+    isTurbo = !isTurbo; const btn = document.getElementById("turboBtn");
+    btn.textContent = isTurbo ? "TURBO: ON" : "TURBO: OFF"; isTurbo ? btn.classList.add("active"):btn.classList.remove("active");
+}
+
+function updateUI(){
+    document.getElementById("saldo").textContent = formatMurni(saldo);
+    document.getElementById("betText").textContent = formatMurni(bet);
+    if(isAutoSpinning) {
+        document.getElementById("autoSpinBox").style.display = "block";
+        document.getElementById("autoCountText").textContent = autoSpinCount;
+        document.getElementById("autoMenuBtn").textContent = "STOP";
+    } else {
+        document.getElementById("autoSpinBox").style.display = "none";
+        document.getElementById("autoMenuBtn").textContent = "AUTO";
+    }
+}
+
+function openBet(){ if(!spinning && !isAutoSpinning) document.getElementById("betModal").style.display="flex"; }
+function closeBet(){ document.getElementById("betModal").style.display="none"; }
+function setBet(v){ bet = v; updateUI(); closeBet(); }
+function openAutoMenu(){ if(!spinning && !isAutoSpinning) document.getElementById("autoModal").style.display="flex"; }
+function closeAutoMenu(){ document.getElementById("autoModal").style.display="none"; }
+
+function handleSpinClick() { if (!isAutoSpinning) { if (!spinning) runSingleSpin(); else forceStopRequested = true; } }
+function startAutoSpin(j){ closeAutoMenu(); autoSpinCount = j; isAutoSpinning = true; updateUI(); runSingleSpin(); }
+
+function pemicuAnimasiMenang(tipe, emoji) {
+    const container = document.getElementById("mainContainer");
+    if (tipe === 5) {
+        container.classList.add("shake-screen"); setTimeout(() => container.classList.remove("shake-screen"), 2500);
+        // Semburan Koin keluar dari tengah kotak jackpot modal
+        for (let i = 0; i < 45; i++) {
+            const p = document.createElement("div"); p.className = "particle p-coin-jp"; p.textContent = "🪙";
+            p.style.left = "50%"; p.style.top = "50%"; p.style.fontSize = (25 + Math.random() * 25) + "px";
+            const sudut = Math.random() * Math.PI * 2; const jarak = 160 + Math.random() * 280;
+            p.style.setProperty('--cx', Math.cos(sudut) * jarak + "px"); p.style.setProperty('--cy', Math.sin(sudut) * jarak + "px");
+            p.style.setProperty('--dur', (0.8 + Math.random() * 0.8) + "s");
+            document.getElementById("jackpotModal").appendChild(p);
+            setTimeout(() => p.remove(), 2000);
+        }
+    }
+}
+
+async function runSingleSpin(){
+    if(spinning) return;
+    if(saldo < bet){ alert("Saldo habis, mohon minta admin isi saldo!"); isAutoSpinning = false; updateUI(); return; }
+
+    spinning = true; forceStopRequested = false; saldo -= bet; updateUI();
+    document.getElementById("result").textContent = "";
+
+    // Sync info settingan terbaru dari Cloud Database sebelum roda berhenti
+    const { data: cloud } = await supabase.from('users').select('status_menang').eq('username', currentUser).single();
+    if(cloud) userSettinganMenang = cloud.status_menang;
+
+    ["r0","r1","r2","r3","r4"].forEach(startReel);
+
+    let targetCombo = 0; let winEmoji = "";
+    let rng = Math.random() * 100;
+
+    // --- LOGIKA CEAT / SETTINGAN KEMANANGAN OLEH PANEL ADMIN ---
+    if (userSettinganMenang === "Gacor") {
+        rng = 0.05; // Paksa masuk RNG Kembar 5 Mahjong
+    } else if (userSettinganMenang === "Zonk") {
+        rng = 95;   // Paksa kalah mutlak
+    }
+
+    // --- CHANCE CHANCE LAWAN RNG NORMAL ---
+    if (rng < 0.125) { targetCombo = 5; winEmoji = "🀄"; } 
+    else if (rng < 0.250) { targetCombo = 5; winEmoji = "🐉"; } 
+    else if (rng < 0.375) { targetCombo = 5; winEmoji = "⚡"; } 
+    else if (rng < 0.500) { targetCombo = 5; winEmoji = "👹"; } 
+    else if (rng < 2.5)   { targetCombo = 4; } 
+    else if (rng < 7.5)   { targetCombo = 3; } 
+    else { targetCombo = 0; }
+
+    let finalResults = [];
+    if (targetCombo >= 3) {
+        if(winEmoji === "") winEmoji = randomFruit();
+        for (let i = 0; i < targetCombo; i++) finalResults.push(winEmoji);
+        while (finalResults.length < 5) finalResults.push(randomFruitExcept([winEmoji]));
+        finalResults.sort(() => Math.random() - 0.5);
+    } else {
+        let e0 = randomFruit(); let e1 = randomFruitExcept([e0]); let e2 = randomFruitExcept([e0, e1]);
+        finalResults = [e0, e1, e2, randomFruit(), randomFruit()];
+    }
+
+    if(!forceStopRequested) await wait(800); stopReel("r0", finalResults[0]);
+    if(!forceStopRequested) await wait(250); stopReel("r1", finalResults[1]);
+    if(!forceStopRequested) await wait(250); stopReel("r2", finalResults[2]);
+    if(!forceStopRequested) await wait(250); stopReel("r3", finalResults[3]);
+    if(!forceStopRequested) await wait(250); stopReel("r4", finalResults[4]);
+
+    let finalCounts = {}; finalResults.forEach(x => finalCounts[x] = (finalCounts[x] || 0) + 1);
+    let menangEmoji = ""; let jumlahKembar = 0;
+    for(let em in finalCounts) { if(finalCounts[em] > jumlahKembar) { jumlahKembar = finalCounts[em]; menangEmoji = em; } }
+    
+    let hadiah = 0;
+    if (jumlahKembar >= 3) {
+        hadiah = bet * emojiSettings[menangEmoji]["x" + jumlahKembar];
+        pemicuAnimasiMenang(jumlahKembar, menangEmoji);
+        document.getElementById("result").textContent = `MENANG Rp${formatMurni(hadiah)}`;
+    }
+    
+    saldo += hadiah;
+    spinning = false;
+    updateUI();
+
+    // KIRIM DAN UPDATE SALDO TERBARU KE DATABASE CLOUD SUPABASE
+    await supabase.from('users').update({ saldo: saldo }).eq('username', currentUser);
+
+    // --- POPUP STOP UNTUK KEMBAR 5 ---
+    if (jumlahKembar === 5) {
+        document.getElementById("jpEmojiBox").textContent = menangEmoji;
+        document.getElementById("jpCounterText").textContent = "Rp0,00";
+        document.getElementById("jackpotModal").style.display = "flex";
+        jalankanCounterJackpot(hadiah);
+        // Menahan auto spin/jalannya code
+        await new Promise(r => { jackpotPromiseResolver = r; });
+    }
+
+    if(isAutoSpinning){
+        autoSpinCount--;
+        if(autoSpinCount <= 0) isAutoSpinning = false;
+        updateUI();
+        if(isAutoSpinning){
+            await wait(1500);
+            if (isAutoSpinning) runSingleSpin();
+        }
+    }
+}
+</script>
+</body>
+</html>
