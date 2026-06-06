@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slots Mahjong Wins - Cloud Ultimate Edition</title>
+    <title>Slot v2 - No Password & Panel Admin Terpisah</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -33,12 +33,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        input {
-            user-select: text;
-            -webkit-user-select: text;
-        }
-
-        select {
+        input, select {
             user-select: text;
             -webkit-user-select: text;
         }
@@ -77,7 +72,7 @@
             padding: 45px 35px;
             border-radius: 20px;
             border: 3px solid var(--gold);
-            width: 360px;
+            width: 380px;
             text-align: center;
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.25), inset 0 0 15px rgba(255, 215, 0, 0.1);
             z-index: 10;
@@ -130,7 +125,7 @@
         .auth-btn {
             width: 100%;
             padding: 14px;
-            margin-top: 20px;
+            margin-top: 15px;
             border-radius: 30px;
             background: linear-gradient(180deg, #ffe600 0%, #b3a200 100%);
             color: black;
@@ -153,12 +148,10 @@
             transform: translateY(1px);
         }
 
-        .toggle-auth-p {
-            margin-top: 20px;
-            font-size: 14px;
-            color: var(--gold);
-            cursor: pointer;
-            text-decoration: underline;
+        .admin-divider {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #44335c;
         }
 
         /* ===================================================
@@ -195,22 +188,6 @@
             font-weight: bold;
         }
 
-        .history-top-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(180deg, #00c6ff 0%, #0072ff 100%);
-            color: white;
-            padding: 10px 20px;
-            font-size: 13px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,114,255,0.3);
-            z-index: 10;
-        }
-
         .logout-btn {
             position: absolute;
             top: 15px;
@@ -240,18 +217,6 @@
             position: relative;
         }
 
-        .machine-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
-            pointer-events: none;
-        }
-
         .machine {
             display: flex;
             justify-content: center;
@@ -269,9 +234,7 @@
             box-shadow: inset 0 0 12px rgba(0,0,0,0.6), 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        .reel.spinning {
-            filter: blur(4px);
-        }
+        .reel.spinning { filter: blur(4px); }
 
         .track {
             position: absolute;
@@ -354,14 +317,8 @@
             transition: all 0.2s ease;
         }
 
-        .btn-control:hover {
-            transform: translateY(-2px);
-            opacity: 0.95;
-        }
-
-        .btn-control:active {
-            transform: translateY(1px);
-        }
+        .btn-control:hover { transform: translateY(-2px); opacity: 0.95; }
+        .btn-control:active { transform: translateY(1px); }
 
         #spinBtn {
             background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
@@ -372,21 +329,9 @@
             box-shadow: 0 0 15px rgba(46,204,113,0.4);
         }
 
-        #autoMenuBtn {
-            background: linear-gradient(180deg, #f39c12 0%, #d35400 100%);
-            color: white;
-        }
-
-        #turboBtn {
-            background: linear-gradient(180deg, #7f8c8d 0%, #34495e 100%);
-            color: white;
-        }
-
-        #turboBtn.active {
-            background: linear-gradient(180deg, #9b59b6 0%, #8e44ad 100%);
-            box-shadow: 0 0 15px rgba(155,89,182,0.6);
-            border: 1px solid #9b59b6;
-        }
+        #autoMenuBtn { background: linear-gradient(180deg, #f39c12 0%, #d35400 100%); color: white; }
+        #turboBtn { background: linear-gradient(180deg, #7f8c8d 0%, #34495e 100%); color: white; }
+        #turboBtn.active { background: linear-gradient(180deg, #9b59b6 0%, #8e44ad 100%); box-shadow: 0 0 15px rgba(155,89,182,0.6); border: 1px solid #9b59b6; }
 
         #result {
             margin-top: 25px;
@@ -448,199 +393,50 @@
             text-align: left;
         }
 
-        .admin-table th {
-            padding: 16px;
-            background-color: var(--neon-red);
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
+        .admin-table th { padding: 16px; background-color: var(--neon-red); color: white; font-weight: bold; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+        .admin-table td { padding: 16px; border-bottom: 1px solid #222233; }
+        .admin-table tr:hover { background: #161625; }
 
-        .admin-table td {
-            padding: 16px;
-            border-bottom: 1px solid #222233;
-        }
-
-        .admin-table tr:hover {
-            background: #161625;
-        }
-
-        .admin-select {
-            padding: 10px 14px;
-            background: #222233;
-            color: white;
-            border: 1px solid #44445c;
-            border-radius: 8px;
-            outline: none;
-            font-weight: 600;
-        }
-
-        .admin-input-saldo {
-            width: 140px;
-            padding: 10px 14px;
-            background: #222233;
-            color: white;
-            border: 1px solid #44445c;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-        }
-
+        .admin-select { padding: 10px 14px; background: #222233; color: white; border: 1px solid #44445c; border-radius: 8px; outline: none; font-weight: 600; }
+        .admin-input-saldo { width: 140px; padding: 10px 14px; background: #222233; color: white; border: 1px solid #44445c; border-radius: 8px; text-align: center; font-weight: bold; }
+        
         .admin-btn-save {
             background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(46,204,113,0.2);
+            color: white; padding: 10px 20px; border-radius: 8px; border: none;
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(46,204,113,0.2);
             transition: transform 0.2s;
         }
+        .admin-btn-save:hover { transform: scale(1.05); }
 
-        .admin-btn-save:hover {
-            transform: scale(1.05);
-        }
-
-        /* ===================================================
-           MODAL DIALOG DICTIONARY CONFIGURATIONS
-           =================================================== */
+        /* MODALS */
         .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-            backdrop-filter: blur(6px);
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            justify-content: center; align-items: center; z-index: 200; backdrop-filter: blur(6px);
         }
 
         .modal-content {
-            background: #151026;
-            color: white;
-            padding: 35px;
-            border-radius: 20px;
-            width: 350px;
-            text-align: center;
-            border: 2px solid #44335c;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            background: #151026; color: white; padding: 35px; border-radius: 20px;
+            width: 350px; text-align: center; border: 2px solid #44335c; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
-        .modal-content h3 {
-            margin-bottom: 20px;
-            color: var(--gold);
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
+        .modal-content h3 { margin-bottom: 20px; color: var(--gold); font-size: 22px; }
+        .option { width: 100%; margin: 10px 0; padding: 14px; font-weight: bold; border-radius: 14px; border: 1px solid #44335c; cursor: pointer; background: #23193d; color: white; font-size: 16px; transition: all 0.2s ease; }
+        .option:hover { background: #322557; border-color: var(--gold); }
 
-        .option {
-            width: 100%;
-            margin: 10px 0;
-            padding: 14px;
-            font-weight: bold;
-            border-radius: 14px;
-            border: 1px solid #44335c;
-            cursor: pointer;
-            background: #23193d;
-            color: white;
-            font-size: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .option:hover {
-            background: #322557;
-            border-color: var(--gold);
-            transform: translateY(-1px);
-        }
-
-        /* ===================================================
-           TAMPILAN SPECIAL ULTRA CELEBRATION MODAL JACKPOT
-           =================================================== */
-        #jackpotModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .jp-card {
-            background: radial-gradient(circle, #2d0a4e 0%, #110322 100%);
-            color: gold;
-            border: 5px solid var(--gold);
-            width: 420px;
-            padding: 45px 35px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 0 60px var(--gold), inset 0 0 35px rgba(255,215,0,0.2);
-            position: relative;
-            animation: popUp 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popUp {
-            0% { transform: scale(0.4); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        #jpEmojiBox {
-            width: 120px;
-            height: 120px;
-            line-height: 120px;
-            margin: 0 auto 25px auto;
-            background: white;
-            border: 4px solid var(--gold);
-            border-radius: 22px;
-            font-size: 70px;
-            box-shadow: 0 0 35px rgba(255,255,255,0.85), inset 0 0 15px rgba(0,0,0,0.2);
-        }
-
-        #jpCounterText {
-            font-size: 40px;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 15px #2ecc71, 0 0 5px #2ecc71;
-            margin-bottom: 35px;
-        }
-
-        /* ===================================================
-           PARTICLE & SCREEN SHAKE SYSTEM ANIMATION
-           =================================================== */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-        }
-
-        @keyframes coinExplode {
-            0% {
-                transform: translate(-50%, -50%) scale(0.1) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(calc(-50% + var(--cx)), calc(-50% + var(--cy))) scale(1.6) rotate(1440deg);
-                opacity: 0;
-            }
-        }
-
-        .p-coin-jp {
-            animation: coinExplode var(--dur) cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
-            z-index: 1100;
-        }
-
-        .shake-screen {
-            animation: screenShake 0.4s linear infinite;
-        }
-
-        @keyframes screenShake {
-            0%, 100% { transform: translate(0, 0); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 5px); }
-            20%, 40%, 60%, 80% { transform: translate(6px, -5px); }
-        }
+        /* JACKPOT MODAL & ANIMATIONS */
+        #jackpotModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; z-index: 1000; }
+        .jp-card { background: radial-gradient(circle, #2d0a4e 0%, #110322 100%); color: gold; border: 5px solid var(--gold); width: 420px; padding: 45px 35px; border-radius: 30px; text-align: center; box-shadow: 0 0 60px var(--gold), inset 0 0 35px rgba(255,215,0,0.2); animation: popUp 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popUp { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        #jpEmojiBox { width: 120px; height: 120px; line-height: 120px; margin: 0 auto 25px auto; background: white; border: 4px solid var(--gold); border-radius: 22px; font-size: 70px; box-shadow: 0 0 35px rgba(255,255,255,0.85), inset 0 0 15px rgba(0,0,0,0.2); }
+        #jpCounterText { font-size: 40px; font-weight: 900; color: #ffffff; text-shadow: 0 0 15px #2ecc71, 0 0 5px #2ecc71; margin-bottom: 35px; }
+        
+        .particle { position: absolute; pointer-events: none; }
+        @keyframes coinExplode { 0% { transform: translate(-50%, -50%) scale(0.1) rotate(0deg); opacity: 1; } 100% { transform: translate(calc(-50% + var(--cx)), calc(-50% + var(--cy))) scale(1.6) rotate(1440deg); opacity: 0; } }
+        .p-coin-jp { animation: coinExplode var(--dur) cubic-bezier(0.1, 0.6, 0.2, 1) forwards; z-index: 1100; }
+        
+        .shake-screen { animation: screenShake 0.4s linear infinite; }
+        @keyframes screenShake { 0%, 100% { transform: translate(0, 0); } 10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 5px); } 20%, 40%, 60%, 80% { transform: translate(6px, -5px); } }
     </style>
 </head>
 <body>
@@ -648,52 +444,50 @@
     <div class="bg-glow"></div>
 
     <div id="authPanel" class="auth-container">
-        <h2 id="authTitle">LOGIN SYSTEM</h2>
+        <h2 id="authTitle">SISTEM GAME</h2>
         
         <div class="auth-group">
-            <label class="auth-label">ID Akun Pemain</label>
-            <input type="text" id="authUsername" class="auth-input" placeholder="Masukkan Username" autocomplete="off">
+            <label class="auth-label">Masukkan Username</label>
+            <input type="text" id="authUsername" class="auth-input" placeholder="ID Pemain..." autocomplete="off">
         </div>
 
-        <div class="auth-group">
-            <label class="auth-label">Kata Sandi / PIN</label>
-            <input type="password" id="authPassword" class="auth-input" placeholder="Masukkan Password">
+        <button class="auth-btn" onclick="prosesAuthPemain()">MASUK / DAFTAR</button>
+        
+        <div class="admin-divider">
+            <p style="font-size:11px; color:#a193b8; margin-bottom: 10px;">Area Khusus Management</p>
+            <button class="auth-btn" style="background: linear-gradient(180deg, #ff4d4d 0%, #cc0000 100%); color: white; margin-top:0;" onclick="bukaPanelAdmin()">PANEL ADMIN</button>
         </div>
-
-        <button class="auth-btn" onclick="prosesAuth()">Masuk Sekarang</button>
-        <p id="toggleAuthText" class="toggle-auth-p" onclick="toggleAuthMode()">Belum punya akun? Registrasi disini</p>
     </div>
 
     <div id="adminPanel">
         <div class="admin-header">
-            <h2>🛠️ PANEL KONTROL MANAGEMENT ADMIN CLOUD</h2>
+            <h2>🛠️ PANEL MANAGEMENT ADMIN</h2>
             <button style="background:var(--neon-red); color:white; padding:10px 22px; border-radius:8px; border:none; font-weight:bold; cursor:pointer;" onclick="logout()">LOGOUT</button>
         </div>
         
-        <h3 style="color: var(--gold); margin-bottom: 5px; font-size:16px;">👥 List Pengaturan Saldo & Skenario Win Rate Akun</h3>
+        <h3 style="color: var(--gold); margin-bottom: 5px; font-size:16px;">👥 Pengaturan Saldo & Skenario Akun Pemain</h3>
         <div class="admin-table-wrapper">
             <table class="admin-table">
                 <thead>
                     <tr>
                         <th>Username Player</th>
-                        <th>Saldo Player Aktif (Rp)</th>
-                        <th>Set Parameter Pola</th>
+                        <th>Saldo Player (Rp)</th>
+                        <th>Set Skenario Win Rate</th>
                         <th>Konfirmasi Pembaruan</th>
                     </tr>
                 </thead>
                 <tbody id="adminUserTableBody">
-                    </tbody>
+                </tbody>
             </table>
         </div>
 
-        <h3 style="margin-top:40px; color: var(--gold); font-size:16px;">📋 Logs Riwayat Akses Masuk Multi-Device (Cloud Realtime)</h3>
+        <h3 style="margin-top:40px; color: var(--gold); font-size:16px;">📋 Logs Riwayat Akses Masuk (Realtime)</h3>
         <div style="max-height: 250px; overflow-y:auto; background:#05050a; padding:15px; border-radius:12px; margin-top:12px; text-align:left; font-size:13px; border: 1px solid #222233; line-height: 1.7;">
             <div id="adminLoginLogs">Mencari log aktivitas server cloud...</div>
         </div>
     </div>
 
     <button class="logout-btn" id="logoutTopBtn" style="display:none;" onclick="logout()">KELUAR</button>
-    <button class="history-top-btn" id="adminTopBtn" style="display:none; background:var(--neon-red);" onclick="bukaPanelAdminBypass()">PANEL ADMIN</button>
 
     <div class="container" id="mainContainer">
         <h1 class="game-title">MAHJONG WINS</h1>
@@ -759,96 +553,37 @@
         <div class="jp-card">
             <h2 style="font-size: 28px; text-shadow: 0 0 15px rgba(255,215,0,0.6); margin-bottom: 5px; letter-spacing: 2px;">🎉 GRAND JACKPOT 🎉</h2>
             <h3 style="color: #ffffff; margin-bottom: 20px; font-size:16px; letter-spacing:1px;">5 KEMBAR IDENTIK MUTLAK</h3>
-            
             <div id="jpEmojiBox">🀄</div>
-            
             <p style="color: #a193b8; font-size: 13px; margin-bottom: 4px; text-transform:uppercase;">Kemenangan Bersih:</p>
             <div id="jpCounterText">Rp0,00</div>
-            
             <button class="option" style="background: linear-gradient(180deg, #ffe600 0%, #b3a200 100%); color: black; font-size: 16px; padding: 14px; border:none; box-shadow:0 5px 15px rgba(0,0,0,0.4);" onclick="closeJackpotModal()">AMBIL HADIAH CASH</button>
         </div>
     </div>
 
     <script>
         // =========================================================================
-        // DATA ACCESS PARAMETER INTEGRASI UTAMA KE DATABASE SUPABASE CLOUD
+        // KONEKSI SUPABASE
         // =========================================================================
-        const SUPABASE_URL = "https://efmgeijwfiobunmwyhpe.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmbWdlaWp3ZmlvYnVubXd5aHBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2ODg4ODUsImV4cCI6MjA5NjI2NDg4NX0.MWDd9zVnIgWGx8lQ4MnBN-ByE24fCduhGGlQnsq9uDU";
+        const SUPABASE_URL = "https://jsbxzhcxpkxjkqbrjveg.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzYnh6aGN4cGt4amtxYnJqdmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MDE4NjAsImV4cCI6MjA5NjI3Nzg2MH0.IDGotWjW94c3FvMjST2eCjC14m3Pjdm29-fwhuySNp4";
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // =========================================================================
-        // DATA DICTIONARY PERKALIAN HADIAH GAME 11 EMOJI UTUH (TERURAI LENGKAP)
+        // DATA MULTIPLIER HADIAH
         // =========================================================================
         const emojiSettings = {
-            "🀄": {
-                nama: "Green Mahjong",
-                x5: 9173.32,
-                x4: 8.80,
-                x3: 1.50
-            },
-            "🐉": {
-                nama: "Dragon Red",
-                x5: 1888.88,
-                x4: 6.50,
-                x3: 1.20
-            },
-            "⚡": {
-                nama: "Zeus Spark",
-                x5: 750.00,
-                x4: 5.00,
-                x3: 1.00
-            },
-            "👹": {
-                nama: "Oni Mask",
-                x5: 350.00,
-                x4: 4.50,
-                x3: 0.90
-            },
-            "🎭": {
-                nama: "Kabuki Face",
-                x5: 180.00,
-                x4: 3.80,
-                x3: 0.75
-            },
-            "🪙": {
-                nama: "Gold Coin",
-                x5: 95.50,
-                x4: 2.80,
-                x3: 0.60
-            },
-            "⛩️": {
-                nama: "Torii Gate",
-                x5: 60.00,
-                x4: 2.20,
-                x3: 0.50
-            },
-            "🐅": {
-                nama: "Tiger Claw",
-                x5: 45.00,
-                x4: 1.80,
-                x3: 0.40
-            },
-            "🌸": {
-                nama: "Sakura Bloom",
-                x5: 30.00,
-                x4: 1.50,
-                x3: 0.30
-            },
-            "🏮": {
-                nama: "Red Lantern",
-                x5: 20.00,
-                x4: 1.00,
-                x3: 0.20
-            },
-            "🎋": {
-                nama: "Lucky Bamboo",
-                x5: 15.00,
-                x4: 0.80,
-                x3: 0.15
-            }
+            "🀄": { nama: "Green Mahjong", x5: 9173.32, x4: 8.80, x3: 1.50 },
+            "🐉": { nama: "Dragon Red", x5: 1888.88, x4: 6.50, x3: 1.20 },
+            "⚡": { nama: "Zeus Spark", x5: 750.00, x4: 5.00, x3: 1.00 },
+            "👹": { nama: "Oni Mask", x5: 350.00, x4: 4.50, x3: 0.90 },
+            "🎭": { nama: "Kabuki Face", x5: 180.00, x4: 3.80, x3: 0.75 },
+            "🪙": { nama: "Gold Coin", x5: 95.50, x4: 2.80, x3: 0.60 },
+            "⛩️": { nama: "Torii Gate", x5: 60.00, x4: 2.20, x3: 0.50 },
+            "🐅": { nama: "Tiger Claw", x5: 45.00, x4: 1.80, x3: 0.40 },
+            "🌸": { nama: "Sakura Bloom", x5: 30.00, x4: 1.50, x3: 0.30 },
+            "🏮": { nama: "Red Lantern", x5: 20.00, x4: 1.00, x3: 0.20 },
+            "🎋": { nama: "Lucky Bamboo", x5: 15.00, x4: 0.80, x3: 0.15 }
         };
-        
         const fruits = Object.keys(emojiSettings);
 
         // SYSTEM GLOBALS INITIALIZATIONS
@@ -864,56 +599,27 @@
         let isAutoSpinning = false;
         const intervals = {};
         let jackpotPromiseResolver = null;
-        let isLoginMode = true;
-
-        // AUTHENTICATION INTERACTION UI FUNCTIONS
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            if (isLoginMode) {
-                document.getElementById("authTitle").textContent = "LOGIN SYSTEM";
-                document.getElementById("toggleAuthText").textContent = "Belum punya akun? Registrasi disini";
-            } else {
-                document.getElementById("authTitle").textContent = "REGISTRASI AKUN";
-                document.getElementById("toggleAuthText").textContent = "Sudah punya akun? Login disini";
-            }
-        }
 
         function formatMurni(nilai) {
             return nilai.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         // =========================================================================
-        // LOGIKA CORE BACKEND AUTH PROCESSING SYSTEM
+        // LOGIKA CORE AUTHENTICATION TANPA PASSWORD & PANEL ADMIN TERPISAH
         // =========================================================================
-        async function prosesAuth() {
+        async function prosesAuthPemain() {
             const user = document.getElementById("authUsername").value.trim();
-            const pass = document.getElementById("authPassword").value.trim();
 
-            if (user === "" || pass === "") {
-                alert("Format isian user dan kata sandi tidak boleh kosong!");
+            if (user === "") {
+                alert("Silakan masukkan Username Anda terlebih dahulu!");
                 return;
             }
 
-            // BACKDOOR LOGIN SYSTEM FOR ACCESS PANEL ADMIN
-            if (user === "kutu" && pass === "loncat") {
-                currentUser = "Admin Kontrol";
-                currentRole = "admin";
-                document.getElementById("authPanel").style.display = "none";
-                document.getElementById("adminPanel").style.display = "block";
-                loadAdminData();
-                await supabase.from('login_logs').insert([{ username: 'Admin Utama (kutu)', perangkat: navigator.userAgent }]);
-                return;
-            }
-
-            if (isLoginMode) {
-                // Alur Sinkronisasi Pengecekan Login Player
-                const { data, error } = await supabase.from('users').select('*').eq('username', user).single();
-                
-                if (error || !data || data.password !== pass) {
-                    alert("Kombinasi User ID atau Kata Sandi Salah!");
-                    return;
-                }
-                
+            // Cek apakah akun username sudah ada di database
+            const { data, error } = await supabase.from('users').select('*').eq('username', user).single();
+            
+            if (data) {
+                // User ditemukan, langsung login
                 currentUser = data.username;
                 saldo = parseFloat(data.saldo);
                 userSettinganMenang = data.status_menang;
@@ -922,27 +628,37 @@
                 await supabase.from('login_logs').insert([{ username: currentUser, perangkat: navigator.userAgent }]);
                 masukGame();
             } else {
-                // Alur Validasi Pembuatan Akun Baru Secara Mandiri
-                const { data: cekUser } = await supabase.from('users').select('username').eq('username', user).single();
+                // User tidak ditemukan, otomatis dibuatkan akun baru tanpa password
+                const modalAwal = 50.00; // Saldo awal gratis untuk pemain baru
+                const { error: insertError } = await supabase.from('users').insert([{ username: user, saldo: modalAwal, status_menang: 'Normal' }]);
                 
-                if (cekUser) {
-                    alert("Username telah terdaftar di database cloud. Gunakan ID unik lain!");
-                    return;
-                }
-
-                // Menyuntik pendaftaran baru dengan modal awal cuma-cuma Rp10,00
-                const { error } = await supabase.from('users').insert([{ username: user, password: pass, saldo: 10.00, status_menang: 'Normal' }]);
-                
-                if (error) {
-                    alert("Lalu lintas server cloud padat, gagal meregistrasikan akun.");
+                if (insertError) {
+                    alert("Gagal meregistrasikan akun baru di database cloud.");
                     return;
                 }
                 
-                alert("Pembuatan Akun Cloud Berhasil! Silakan klik Masuk.");
-                toggleAuthMode();
-                document.getElementById("authUsername").value = user;
-                document.getElementById("authPassword").value = "";
+                currentUser = user;
+                saldo = modalAwal;
+                userSettinganMenang = "Normal";
+                currentRole = "player";
+                
+                await supabase.from('login_logs').insert([{ username: currentUser, perangkat: navigator.userAgent }]);
+                alert(`Akun baru dengan ID: ${user} berhasil didaftarkan secara otomatis!`);
+                masukGame();
             }
+        }
+
+        async function bukaPanelAdmin() {
+            currentUser = "Admin System";
+            currentRole = "admin";
+            
+            // Langsung menyembunyikan panel auth dan memunculkan panel admin
+            document.getElementById("authPanel").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
+            
+            // Tarik data pemain dari database
+            loadAdminData();
+            await supabase.from('login_logs').insert([{ username: 'Admin Panel', perangkat: navigator.userAgent }]);
         }
 
         function masukGame() {
@@ -959,18 +675,8 @@
             document.getElementById("mainContainer").style.display = "none";
             document.getElementById("adminPanel").style.display = "none";
             document.getElementById("logoutTopBtn").style.display = "none";
-            document.getElementById("adminTopBtn").style.display = "none";
             document.getElementById("authPanel").style.display = "block";
             document.getElementById("authUsername").value = "";
-            document.getElementById("authPassword").value = "";
-        }
-
-        function bukaPanelAdminBypass() {
-            if (currentRole === "admin") {
-                document.getElementById("mainContainer").style.display = "none";
-                document.getElementById("adminPanel").style.display = "block";
-                loadAdminData();
-            }
         }
 
         // =========================================================================
@@ -1005,7 +711,6 @@
                 });
             }
 
-            // Menarik logs login multi device
             const { data: logs } = await supabase.from('login_logs').select('*').order('waktu', { ascending: false }).limit(35);
             const logBox = document.getElementById("adminLoginLogs");
             logBox.innerHTML = "";
@@ -1013,7 +718,7 @@
             if (logs) {
                 logs.forEach(l => {
                     const d = new Date(l.waktu).toLocaleString("id-ID");
-                    logBox.innerHTML += `⏱️ <b>[${d}]</b> - User ID: <span style="color:#66fcf1; font-weight:bold;">${l.username}</span> mendeteksi akses masuk dari device: <span style="color:#8888aa; font-size:12px;">${l.perangkat}</span><br>`;
+                    logBox.innerHTML += `⏱️ <b>[${d}]</b> - User ID: <span style="color:#66fcf1; font-weight:bold;">${l.username}</span> login via: <span style="color:#8888aa; font-size:12px;">${l.perangkat}</span><br>`;
                 });
             }
         }
@@ -1028,60 +733,36 @@
                 alert(`Data User [${targetUser}] Sukses Diperbarui di Server Cloud!`);
                 loadAdminData();
             } else {
-                alert("Gagal melakukan enkripsi sinkronisasi data cloud.");
+                alert("Gagal melakukan sinkronisasi data cloud.");
             }
         }
 
         // =========================================================================
         // CORE MECHANIC RUN GAMEPLAY REELS SLOT LOGIC
         // =========================================================================
-        function randomFruit() {
-            return fruits[Math.floor(Math.random() * fruits.length)];
-        }
-
-        function randomFruitExcept(fb) {
-            const al = fruits.filter(f => !fb.includes(f));
-            return al[Math.floor(Math.random() * al.length)];
-        }
+        function randomFruit() { return fruits[Math.floor(Math.random() * fruits.length)]; }
+        function randomFruitExcept(fb) { const al = fruits.filter(f => !fb.includes(f)); return al[Math.floor(Math.random() * al.length)]; }
 
         function createTrack(id) {
             const track = document.getElementById(id);
             track.innerHTML = "";
             for (let i = 0; i < 12; i++) {
-                const div = document.createElement("div");
-                div.className = "item";
-                div.textContent = randomFruit();
-                track.appendChild(div);
+                const div = document.createElement("div"); div.className = "item"; div.textContent = randomFruit(); track.appendChild(div);
             }
         }
-        
         ["r0", "r1", "r2", "r3", "r4"].forEach(createTrack);
 
         function startReel(id) {
             const track = document.getElementById(id);
             track.parentElement.classList.add("spinning");
-            
-            let speed = 110;
-            if (isTurbo) {
-                speed = 50;
-            }
+            let speed = isTurbo ? 50 : 110;
             
             intervals[id] = setInterval(() => {
-                const item = document.createElement("div");
-                item.className = "item";
-                item.textContent = randomFruit();
+                const item = document.createElement("div"); item.className = "item"; item.textContent = randomFruit();
                 track.prepend(item);
-                
-                track.style.transition = "none";
-                track.style.transform = "translateY(-80px)";
-                track.offsetHeight;
-                
-                track.style.transition = `transform ${speed / 1000}s linear`;
-                track.style.transform = "translateY(0px)";
-                
-                while (track.children.length > 12) {
-                    track.removeChild(track.lastElementChild);
-                }
+                track.style.transition = "none"; track.style.transform = "translateY(-80px)"; track.offsetHeight;
+                track.style.transition = `transform ${speed / 1000}s linear`; track.style.transform = "translateY(0px)";
+                while (track.children.length > 12) track.removeChild(track.lastElementChild);
             }, speed);
         }
 
@@ -1089,66 +770,41 @@
             clearInterval(intervals[id]);
             const track = document.getElementById(id);
             track.parentElement.classList.remove("spinning");
-            
-            let fruit = randomFruit();
-            if (forcedFruit) {
-                fruit = forcedFruit;
-            }
-            
+            let fruit = forcedFruit ? forcedFruit : randomFruit();
             track.innerHTML = `<div class="item">${fruit}</div>`;
             return fruit;
         }
 
-        function wait(ms) {
-            let waktuTunggu = ms;
-            if (isTurbo) {
-                waktuTunggu = ms * 0.15;
-            }
-            return new Promise(resolve => setTimeout(resolve, waktuTunggu));
-        }
+        function wait(ms) { return new Promise(resolve => setTimeout(resolve, isTurbo ? ms * 0.15 : ms)); }
 
         function jalankanCounterJackpot(targetHadiah) {
             const counterElement = document.getElementById("jpCounterText");
             let start = null;
-            
             function step(timestamp) {
                 if (!start) start = timestamp;
                 const progress = Math.min((timestamp - start) / 2000, 1);
                 counterElement.textContent = "Rp" + formatMurni(progress * targetHadiah);
-                
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    counterElement.textContent = "Rp" + formatMurni(targetHadiah);
-                }
+                if (progress < 1) window.requestAnimationFrame(step);
+                else counterElement.textContent = "Rp" + formatMurni(targetHadiah);
             }
             window.requestAnimationFrame(step);
         }
 
         function closeJackpotModal() {
             document.getElementById("jackpotModal").style.display = "none";
-            if (jackpotPromiseResolver) {
-                jackpotPromiseResolver();
-                jackpotPromiseResolver = null;
-            }
+            if (jackpotPromiseResolver) { jackpotPromiseResolver(); jackpotPromiseResolver = null; }
         }
 
         function toggleTurbo() {
             isTurbo = !isTurbo;
             const btn = document.getElementById("turboBtn");
-            if (isTurbo) {
-                btn.textContent = "TURBO: ON";
-                btn.classList.add("active");
-            } else {
-                btn.textContent = "TURBO: OFF";
-                btn.classList.remove("active");
-            }
+            btn.textContent = isTurbo ? "TURBO: ON" : "TURBO: OFF";
+            isTurbo ? btn.classList.add("active") : btn.classList.remove("active");
         }
 
         function updateUI() {
             document.getElementById("saldo").textContent = formatMurni(saldo);
             document.getElementById("betText").textContent = formatMurni(bet);
-            
             if (isAutoSpinning) {
                 document.getElementById("autoSpinBox").style.display = "block";
                 document.getElementById("autoCountText").textContent = autoSpinCount;
@@ -1159,79 +815,35 @@
             }
         }
 
-        function openBet() {
-            if (!spinning && !isAutoSpinning) {
-                document.getElementById("betModal").style.display = "flex";
-            }
-        }
-
-        function closeBet() {
-            document.getElementById("betModal").style.display = "none";
-        }
-
-        function setBet(v) {
-            bet = v;
-            updateUI();
-            closeBet();
-        }
-
-        function openAutoMenu() {
-            if (!spinning && !isAutoSpinning) {
-                document.getElementById("autoModal").style.display = "flex";
-            }
-        }
-
-        function closeAutoMenu() {
-            document.getElementById("autoModal").style.display = "none";
-        }
+        function openBet() { if (!spinning && !isAutoSpinning) document.getElementById("betModal").style.display = "flex"; }
+        function closeBet() { document.getElementById("betModal").style.display = "none"; }
+        function setBet(v) { bet = v; updateUI(); closeBet(); }
+        
+        function openAutoMenu() { if (!spinning && !isAutoSpinning) document.getElementById("autoModal").style.display = "flex"; }
+        function closeAutoMenu() { document.getElementById("autoModal").style.display = "none"; }
 
         function handleSpinClick() {
-            if (!isAutoSpinning) {
-                if (!spinning) {
-                    runSingleSpin();
-                } else {
-                    forceStopRequested = true;
-                }
-            }
+            if (!isAutoSpinning) { !spinning ? runSingleSpin() : forceStopRequested = true; }
         }
 
         function startAutoSpin(j) {
-            closeAutoMenu();
-            autoSpinCount = j;
-            isAutoSpinning = true;
-            updateUI();
-            runSingleSpin();
+            closeAutoMenu(); autoSpinCount = j; isAutoSpinning = true; updateUI(); runSingleSpin();
         }
 
         function pemicuAnimasiMenang(tipe, emoji) {
             const container = document.getElementById("mainContainer");
             if (tipe === 5) {
                 container.classList.add("shake-screen");
-                setTimeout(() => {
-                    container.classList.remove("shake-screen");
-                }, 2500);
+                setTimeout(() => container.classList.remove("shake-screen"), 2500);
                 
-                // Menyemburkan koin selebrasi megawin di dalam layar modal popup
                 for (let i = 0; i < 45; i++) {
-                    const p = document.createElement("div");
-                    p.className = "particle p-coin-jp";
-                    p.textContent = "🪙";
-                    p.style.left = "50%";
-                    p.style.top = "50%";
-                    p.style.fontSize = (25 + Math.random() * 25) + "px";
-                    
-                    const sudut = Math.random() * Math.PI * 2;
-                    const jarak = 160 + Math.random() * 280;
-                    
-                    p.style.setProperty('--cx', Math.cos(sudut) * jarak + "px");
-                    p.style.setProperty('--cy', Math.sin(sudut) * jarak + "px");
+                    const p = document.createElement("div"); p.className = "particle p-coin-jp"; p.textContent = "🪙";
+                    p.style.left = "50%"; p.style.top = "50%"; p.style.fontSize = (25 + Math.random() * 25) + "px";
+                    const sudut = Math.random() * Math.PI * 2; const jarak = 160 + Math.random() * 280;
+                    p.style.setProperty('--cx', Math.cos(sudut) * jarak + "px"); p.style.setProperty('--cy', Math.sin(sudut) * jarak + "px");
                     p.style.setProperty('--dur', (0.8 + Math.random() * 0.8) + "s");
-                    
                     document.getElementById("jackpotModal").appendChild(p);
-                    
-                    setTimeout(() => {
-                        p.remove();
-                    }, 2000);
+                    setTimeout(() => p.remove(), 2000);
                 }
             }
         }
@@ -1241,137 +853,60 @@
         // =========================================================================
         async function runSingleSpin() {
             if (spinning) return;
-            
             if (saldo < bet) {
-                alert("Sisa Tunai Dompet Elektronik Tidak Mencukupi, Silakan Isi Ulang Lewat Admin!");
-                isAutoSpinning = false;
-                updateUI();
-                return;
+                alert("Saldo tidak cukup! Silakan minta Admin menambahkannya.");
+                isAutoSpinning = false; updateUI(); return;
             }
 
-            spinning = true;
-            forceStopRequested = false;
-            saldo -= bet;
-            updateUI();
+            spinning = true; forceStopRequested = false; saldo -= bet; updateUI();
             document.getElementById("result").textContent = "";
 
-            // Menarik parameter status settingan cheat dari cloud server tepat sebelum roda dikunci mati
             const { data: cloud } = await supabase.from('users').select('status_menang').eq('username', currentUser).single();
-            if (cloud) {
-                userSettinganMenang = cloud.status_menang;
-            }
+            if (cloud) userSettinganMenang = cloud.status_menang;
 
-            // Memulai putaran 5 roda sekaligus
-            startReel("r0");
-            startReel("r1");
-            startReel("r2");
-            startReel("r3");
-            startReel("r4");
+            startReel("r0"); startReel("r1"); startReel("r2"); startReel("r3"); startReel("r4");
 
-            let targetCombo = 0;
-            let winEmoji = "";
-            let rng = Math.random() * 100;
+            let targetCombo = 0; let winEmoji = ""; let rng = Math.random() * 100;
 
-            // EVALUASI SINKRONISASI INTERVENSI KONTROL PANEL CHEAT ADMIN
-            if (userSettinganMenang === "Gacor") {
-                rng = 0.04;
-            } else if (userSettinganMenang === "Zonk") {
-                rng = 96;
-            }
+            if (userSettinganMenang === "Gacor") rng = 0.04;
+            else if (userSettinganMenang === "Zonk") rng = 96;
 
-            // ALGORITMA MATRIKS CHANCE PERSENTASE ELEMEN 11 EMOJI MAHJONG WINS
-            if (rng < 0.08) {
-                targetCombo = 5;
-                winEmoji = "🀄";
-            } else if (rng < 0.16) {
-                targetCombo = 5;
-                winEmoji = "🐉";
-            } else if (rng < 0.24) {
-                targetCombo = 5;
-                winEmoji = "⚡";
-            } else if (rng < 0.32) {
-                targetCombo = 5;
-                winEmoji = "👹";
-            } else if (rng < 0.40) {
-                targetCombo = 5;
-                winEmoji = "🎭";
-            } else if (rng < 0.48) {
-                targetCombo = 5;
-                winEmoji = "🪙";
-            } else if (rng < 0.56) {
-                targetCombo = 5;
-                winEmoji = "⛩️";
-            } else if (rng < 0.64) {
-                targetCombo = 5;
-                winEmoji = "🐅";
-            } else if (rng < 0.72) {
-                targetCombo = 5;
-                winEmoji = "🌸";
-            } else if (rng < 0.80) {
-                targetCombo = 5;
-                winEmoji = "🏮";
-            } else if (rng < 0.88) {
-                targetCombo = 5;
-                winEmoji = "🎋";
-            } else if (rng < 2.5) {
-                targetCombo = 4;
-            } else if (rng < 7.5) {
-                targetCombo = 3;
-            } else {
-                targetCombo = 0;
-            }
+            if (rng < 0.08) { targetCombo = 5; winEmoji = "🀄"; }
+            else if (rng < 0.16) { targetCombo = 5; winEmoji = "🐉"; }
+            else if (rng < 0.24) { targetCombo = 5; winEmoji = "⚡"; }
+            else if (rng < 0.32) { targetCombo = 5; winEmoji = "👹"; }
+            else if (rng < 0.40) { targetCombo = 5; winEmoji = "🎭"; }
+            else if (rng < 0.48) { targetCombo = 5; winEmoji = "🪙"; }
+            else if (rng < 0.56) { targetCombo = 5; winEmoji = "⛩️"; }
+            else if (rng < 0.64) { targetCombo = 5; winEmoji = "🐅"; }
+            else if (rng < 0.72) { targetCombo = 5; winEmoji = "🌸"; }
+            else if (rng < 0.80) { targetCombo = 5; winEmoji = "🏮"; }
+            else if (rng < 0.88) { targetCombo = 5; winEmoji = "🎋"; }
+            else if (rng < 2.5) targetCombo = 4;
+            else if (rng < 7.5) targetCombo = 3;
+            else targetCombo = 0;
 
             let finalResults = [];
             if (targetCombo >= 3) {
-                if (winEmoji === "") {
-                    winEmoji = randomFruit();
-                }
-                for (let i = 0; i < targetCombo; i++) {
-                    finalResults.push(winEmoji);
-                }
-                while (finalResults.length < 5) {
-                    finalResults.push(randomFruitExcept([winEmoji]));
-                }
-                // Mengacak posisi item agar terlihat natural bagi player
+                if (winEmoji === "") winEmoji = randomFruit();
+                for (let i = 0; i < targetCombo; i++) finalResults.push(winEmoji);
+                while (finalResults.length < 5) finalResults.push(randomFruitExcept([winEmoji]));
                 finalResults.sort(() => Math.random() - 0.5);
             } else {
-                let e0 = randomFruit();
-                let e1 = randomFruitExcept([e0]);
-                let e2 = randomFruitExcept([e0, e1]);
+                let e0 = randomFruit(); let e1 = randomFruitExcept([e0]); let e2 = randomFruitExcept([e0, e1]);
                 finalResults = [e0, e1, e2, randomFruit(), randomFruit()];
             }
 
-            // MEKANISME SEQUENTIAL STOPPING TIMEOUT REELS LOCK
-            if (!forceStopRequested) await wait(850);
-            stopReel("r0", finalResults[0]);
-            
-            if (!forceStopRequested) await wait(250);
-            stopReel("r1", finalResults[1]);
-            
-            if (!forceStopRequested) await wait(250);
-            stopReel("r2", finalResults[2]);
-            
-            if (!forceStopRequested) await wait(250);
-            stopReel("r3", finalResults[3]);
-            
-            if (!forceStopRequested) await wait(250);
-            stopReel("r4", finalResults[4]);
+            if (!forceStopRequested) await wait(850); stopReel("r0", finalResults[0]);
+            if (!forceStopRequested) await wait(250); stopReel("r1", finalResults[1]);
+            if (!forceStopRequested) await wait(250); stopReel("r2", finalResults[2]);
+            if (!forceStopRequested) await wait(250); stopReel("r3", finalResults[3]);
+            if (!forceStopRequested) await wait(250); stopReel("r4", finalResults[4]);
 
-            // MENGALCULASI SKOR HASIL PUTARAN AKHIR RODA
-            let finalCounts = {};
-            finalResults.forEach(x => {
-                finalCounts[x] = (finalCounts[x] || 0) + 1;
-            });
+            let finalCounts = {}; finalResults.forEach(x => { finalCounts[x] = (finalCounts[x] || 0) + 1; });
             
-            let menangEmoji = "";
-            let jumlahKembar = 0;
-            
-            for (let em in finalCounts) {
-                if (finalCounts[em] > jumlahKembar) {
-                    jumlahKembar = finalCounts[em];
-                    menangEmoji = em;
-                }
-            }
+            let menangEmoji = ""; let jumlahKembar = 0;
+            for (let em in finalCounts) { if (finalCounts[em] > jumlahKembar) { jumlahKembar = finalCounts[em]; menangEmoji = em; } }
 
             let hadiah = 0;
             if (jumlahKembar >= 3) {
@@ -1381,36 +916,25 @@
                 document.getElementById("result").textContent = `WIN Rp${formatMurni(hadiah)}`;
             }
 
-            saldo += hadiah;
-            spinning = false;
-            updateUI();
+            saldo += hadiah; spinning = false; updateUI();
 
-            // Melakukan update otomatis sisa saldo terkini player ke database cloud
             await supabase.from('users').update({ saldo: saldo }).eq('username', currentUser);
 
-            // Memicu Window Selebrasi Grand Jackpot Jika Terjadi Kembar 5 Identik
             if (jumlahKembar === 5) {
                 document.getElementById("jpEmojiBox").textContent = menangEmoji;
                 document.getElementById("jpCounterText").textContent = "Rp0,00";
                 document.getElementById("jackpotModal").style.display = "flex";
                 jalankanCounterJackpot(hadiah);
-                await new Promise(r => {
-                    jackpotPromiseResolver = r;
-                });
+                await new Promise(r => { jackpotPromiseResolver = r; });
             }
 
-            // AUTO SPIN ENGINE LOOPING MANAGEMENT
             if (isAutoSpinning) {
                 autoSpinCount--;
-                if (autoSpinCount <= 0) {
-                    isAutoSpinning = false;
-                }
+                if (autoSpinCount <= 0) isAutoSpinning = false;
                 updateUI();
                 if (isAutoSpinning) {
                     await wait(1600);
-                    if (isAutoSpinning) {
-                        runSingleSpin();
-                    }
+                    if (isAutoSpinning) runSingleSpin();
                 }
             }
         }
